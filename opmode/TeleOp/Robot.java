@@ -58,11 +58,11 @@ public abstract class Robot extends LinearOpMode {
     public static boolean stickyDebug = false;
     public static BiConsumer<String, Object> telemetryC = (s, o) -> {
         Log.e("Brotato chip you're writing to nothing", "Dummy didnt refresh access haha");
-        throw new NullPointerException("Shit isnt initialized gng");
+        throw new NullPointerException("Object isn't initialized");
     };
     public static Runnable updateTelemetry = () -> {
         Log.e("Brotato chip you're writing to nothing", "Dummy didnt refresh access haha");
-        throw new NullPointerException("Shit isnt initialized gng");
+        throw new NullPointerException("Object isn't initialized");
     };
 
     public static Supplier<BiConsumer<String, Object>> getTelemetry = () -> telemetryC;
@@ -153,109 +153,4 @@ public abstract class Robot extends LinearOpMode {
         pinpointSubsystem.setPositionPose(startingPose);
     }
 
-    public void initialize(DriveMode initialDrive, Pose2d startingPose, Alliance alliance)
-    {
-        this.initialize(DriveMode.VELODRIVE, alliance);
-        pinpointSubsystem.setPositionPose(startingPose);
-    }
-
-    public void waitForPinpoint()
-    {
-        ElapsedTime local = new ElapsedTime();
-        local.reset();
-        while (pinpointSubsystem.getDeviceStatus() != GoBildaPinpointDriver.DeviceStatus.READY)
-        {
-            pinpointSubsystem.periodic();
-            telemetry.addData("Pinpoint Device Status: ", pinpointSubsystem.getDeviceStatus());
-            telemetry.addData("proof this isn't static", Math.random());
-            telemetry.update();
-            if (local.seconds() > 5.00)
-            {
-                throw new RuntimeException("twin im waiting for dis damn pinpoint for too long");
-            }
-        }
-    }
-
-    public void update()
-    {
-        if (Constants.drawRobot) {
-            TelemetryPacket packet = new TelemetryPacket();
-            drawRobot(packet.fieldOverlay(), pinpointSubsystem.getPose(), "blue");
-            drawRobot(packet.fieldOverlay(), sotm.iterativeProjectedRobotToField(), "yellow");
-            FtcDashboard.getInstance().sendTelemetryPacket(packet);
-        }
-
-        for (LynxModule hub : hubs) {
-            hub.clearBulkCache();
-        }
-        CommandScheduler.getInstance().run();
-        telemetry.addData("Loop time", loopTimer.milliseconds());
-        loopTimer.reset();
-        telemetry.update();
-    }
-
-    public void end()
-    {
-        for (LynxModule hub : hubs) {
-            hub.clearBulkCache();
-            hub.abandonUnfinishedCommands();
-        }
-
-        ledSubsystem.turnOff();
-        CommandScheduler.getInstance().reset();
-    }
-
-    public void initDebug()
-    {
-        pinpointSubsystem.periodic();
-        telemetry.addLine("---- INIT STATUS LOOP ----");
-        telemetry.addData("Pinpoint Position", pinpointSubsystem.getPose());
-        telemetry.addData("Pinpoint Calibration Status: ", pinpointSubsystem.isDoneCalibration());
-        telemetry.addData("Pinpoint Device Status: ", pinpointSubsystem.getDeviceStatus());
-        telemetry.addData("proof this isn't static", Math.random());
-
-        for (LynxModule hub : hubs) {
-            hub.clearBulkCache();
-        }
-        telemetry.update();
-    }
-
-    public void handleDriveMode(DriveMode driveMode)
-    {
-        switch (driveMode) {
-            case VELODRIVE:
-                mecanumSubsystem.setDriveModeALL(true);
-                break;
-            case SIMPLEDRIVE:
-                mecanumSubsystem.setDriveModeALL(false);
-                break;
-        }
-    }
-
-    public void drawRobot(Canvas c, Pose2d t, String color) {
-        final double ROBOT_RADIUS = 9;
-        c.setStrokeWidth(1);
-        c.strokeCircle(t.getX(), t.getY(), ROBOT_RADIUS);
-        c.setStroke(color);
-
-        Vector2d halfv = new Vector2d(t.getRotation().getCos(), t.getRotation().getSin()).times(0.5*ROBOT_RADIUS);
-        Vector2d p1 = new Vector2d(t.getX(), t.getY()).plus(halfv);
-        Vector2d p2 = p1.plus(halfv);
-        c.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-    }
-
-    public void telemetryWrite(String label, Object input)
-    {
-        telemetry.addData(label, input);
-    }
-
-    public enum DriveMode {
-        SIMPLEDRIVE,
-        VELODRIVE
-    }
-
-    public enum Alliance {
-        RED,
-        BLUE
-    }
-}
+    public void initialize(DriveMode initialDrive, Pose2
