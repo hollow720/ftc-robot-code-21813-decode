@@ -13,13 +13,5 @@ Java robot code for our FIRST Tech Challenge team's DECODE season robot, built o
 ## Tech
 Java, FTC SDK, FTCLib (command-based), FTC Dashboard, goBILDA Pinpoint
 
-## My contributions
-- [keep only the lines that are true for you, delete the rest]
-- Wrote the autonomous routines
-- Programmed the shooter and hood control
-- Programmed the turret aiming
-- Built the TeleOp controls
-- Tuned constants and tested the robot at practice and competitions
-
 ## Team
 Team project, shared with permission.
